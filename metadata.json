@@ -1,0 +1,6 @@
+{
+  "name": "Aura Mobile Store",
+  "description": "A minimalist, Apple-inspired mobile phone store with role-based access for Guests, Admins, and Super Admins. Powered by Google Sheets and Drive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
