@@ -43,7 +43,7 @@ async function startServer() {
     upload.single('image'),
     async (req, res) => {
       try {
-        const { name, price, description, category } = req.body;
+        const { imei, name, colour, storage, brand, condition, batteryHealth, infoLink, region, qty, price } = req.body;
         const file = req.file;
 
         if (!file) {
@@ -56,7 +56,7 @@ async function startServer() {
         bufferStream.push(null);
 
         const result = await GoogleService.addProduct(
-          { name, price, description, category },
+          { imei, name, colour, storage, brand, condition, batteryHealth, infoLink, region, qty, price },
           bufferStream,
           file.originalname
         );
@@ -65,6 +65,39 @@ async function startServer() {
       } catch (error) {
         console.error("Upload error:", error);
         res.status(500).json({ error: "Internal Server Error" });
+      }
+    }
+  );
+
+  // Admin Only: Delete Product
+  app.delete(
+    "/api/admin/products/:id",
+    rbacMiddleware([UserRole.ADMIN, UserRole.SUPER_ADMIN]),
+    async (req, res) => {
+      try {
+        const { id } = req.params;
+        const result = await GoogleService.deleteProduct(id);
+        res.json(result);
+      } catch (error) {
+        console.error("Delete error:", error);
+        res.status(500).json({ error: "Failed to delete product" });
+      }
+    }
+  );
+
+  // Admin Only: Update Product
+  app.patch(
+    "/api/admin/products/:id",
+    rbacMiddleware([UserRole.ADMIN, UserRole.SUPER_ADMIN]),
+    async (req, res) => {
+      try {
+        const { id } = req.params;
+        const productData = req.body;
+        const result = await GoogleService.updateProduct(id, productData);
+        res.json(result);
+      } catch (error) {
+        console.error("Update error:", error);
+        res.status(500).json({ error: "Failed to update product" });
       }
     }
   );

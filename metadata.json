@@ -1,6 +1,6 @@
 {
   "name": "Aura Mobile Store",
-  "description": "A minimalist, Apple-inspired mobile phone store with role-based access for Guests, Admins, and Super Admins. Powered by Google Sheets and Drive.",
+  "description": "A high-end, Apple-inspired mobile ecosystem with a dynamic inventory management system. Features active Add/Edit/Delete cloud synchronization with Google Sheets and secure Drive image storage.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
