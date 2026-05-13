@@ -117,27 +117,35 @@ export class GoogleService {
 
   /**
    * Admin function to add a new product:
-   * 1. Uploads image to Drive
+   * 1. (Optional) Uploads image to Drive
    * 2. Appends data to Sheets
    */
-  static async addProduct(product: Omit<Product, 'imageId'>, imageStream: any, fileName: string) {
+  static async addProduct(product: Omit<Product, 'imageId'> & { imageId?: string }, imageStream?: any, fileName?: string, mimeType?: string) {
     try {
       const drive = google.drive({ version: 'v3', auth: this.auth });
       const sheets = google.sheets({ version: 'v4', auth: this.auth });
       const { title } = await this.getSheetInfo();
 
-      // 1. Upload Image to Drive
-      const driveResponse = await drive.files.create({
-        requestBody: {
-          name: fileName,
-          parents: [this.folderId!],
-        },
-        media: {
-          body: imageStream,
-        },
-      });
+      let imageId = product.imageId || '';
 
-      const imageId = driveResponse.data.id;
+      // 1. Upload Image to Drive if stream is provided
+      if (imageStream && fileName) {
+        const driveResponse = await drive.files.create({
+          requestBody: {
+            name: fileName,
+            parents: [this.folderId!],
+          },
+          media: {
+            mimeType: mimeType || 'image/jpeg',
+            body: imageStream,
+          },
+        });
+        imageId = driveResponse.data.id || '';
+      }
+
+      if (!imageId) {
+        throw new Error('Image reference (Drive ID or URL) is required.');
+      }
 
       // 2. Append Row to Sheets
       const newId = Date.now().toString();

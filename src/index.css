@@ -3,15 +3,33 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-apple-gray: #f5f5f7;
-  --color-apple-text: #1d1d1f;
-  --color-dark-green: #064e4b;
-  --color-aura-gold: #c5a059;
+  --color-apple-gray: #fcfcfc;
+  --color-apple-text: #1a1a1a;
+  --color-primary-gold: #C5A059;
+  --color-dark-gold: #917646;
+  --color-light-gold: #E5D5B7;
   --color-apple-blue: #0071e3;
 }
 
 @layer base {
   body {
-    @apply font-sans bg-apple-gray text-apple-text antialiased;
+    @apply font-sans bg-white text-apple-text antialiased;
   }
+}
+
+@keyframes snow {
+  0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(1px);
+  animation: snow linear infinite;
 }
